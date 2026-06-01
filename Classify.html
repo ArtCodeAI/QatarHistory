@@ -1,0 +1,324 @@
+```html
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>وجهة قطر - قطب السياحة الثقافية والطبية</title>
+
+<style>
+
+body{
+    font-family:Tahoma, Arial, sans-serif;
+    margin:0;
+    background:#f4f7fb;
+}
+
+header{
+    background:#8A1538;
+    color:white;
+    text-align:center;
+    padding:15px;
+}
+
+.container{
+    display:flex;
+    flex-wrap:wrap;
+}
+
+.sidebar{
+    width:300px;
+    background:white;
+    padding:15px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+.map{
+    flex:1;
+    min-height:700px;
+    background:#dbefff;
+    position:relative;
+}
+
+.landmark{
+    background:white;
+    border:2px solid #8A1538;
+    border-radius:10px;
+    padding:10px;
+    margin-bottom:10px;
+    cursor:grab;
+    font-weight:bold;
+    text-align:center;
+}
+
+.zone{
+    position:absolute;
+    border:3px dashed #555;
+    border-radius:15px;
+    background:rgba(255,255,255,0.8);
+    padding:10px;
+    text-align:center;
+    font-weight:bold;
+}
+
+#cultural{
+    top:120px;
+    right:300px;
+    width:220px;
+    height:140px;
+}
+
+#medical{
+    top:300px;
+    right:500px;
+    width:220px;
+    height:140px;
+}
+
+#eco{
+    top:470px;
+    right:180px;
+    width:260px;
+    height:160px;
+}
+
+#education{
+    top:120px;
+    right:650px;
+    width:220px;
+    height:140px;
+}
+
+.scoreboard{
+    background:#eee;
+    border-radius:10px;
+    padding:10px;
+    margin-top:20px;
+}
+
+.message{
+    margin-top:15px;
+    font-weight:bold;
+}
+
+.win{
+    color:green;
+}
+
+.lose{
+    color:red;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>🇶🇦 وجهة قطر: قطب السياحة الثقافية والطبية</h1>
+
+<p>
+قم ببناء قطاع السياحة في قطر مع المحافظة على البيئة والتراث الثقافي.
+</p>
+</header>
+
+<div class="container">
+
+<div class="sidebar">
+
+<h2>المعالم السياحية</h2>
+
+<div class="landmark" draggable="true" data-zone="cultural">
+🏛 الحي الثقافي كتارا
+</div>
+
+<div class="landmark" draggable="true" data-zone="medical">
+🏥 مستشفى سبيتار
+</div>
+
+<div class="landmark" draggable="true" data-zone="eco">
+🏜 خور العديد
+</div>
+
+<div class="landmark" draggable="true" data-zone="eco">
+🐪 سيلين
+</div>
+
+<div class="landmark" draggable="true" data-zone="education">
+🎓 المدينة التعليمية
+</div>
+
+<div class="scoreboard">
+
+<h3>درجة السياحة</h3>
+<p id="tourismScore">0</p>
+
+<h3>درجة الاستدامة</h3>
+<p id="ecoScore">100</p>
+
+</div>
+
+<div id="message" class="message"></div>
+
+</div>
+
+<div class="map">
+
+<div class="zone" id="cultural">
+🏛 منطقة السياحة الثقافية
+</div>
+
+<div class="zone" id="medical">
+🏥 منطقة السياحة الطبية
+</div>
+
+<div class="zone" id="eco">
+🌿 منطقة السياحة البيئية
+</div>
+
+<div class="zone" id="education">
+🎓 منطقة سياحة المعرفة
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let tourismScore = 0;
+let ecoScore = 100;
+let placedItems = 0;
+
+const landmarks =
+document.querySelectorAll(".landmark");
+
+const zones =
+document.querySelectorAll(".zone");
+
+landmarks.forEach(item=>{
+
+item.addEventListener("dragstart",e=>{
+
+e.dataTransfer.setData(
+"zone",
+item.dataset.zone
+);
+
+e.dataTransfer.setData(
+"text",
+item.innerText
+);
+
+});
+
+});
+
+zones.forEach(zone=>{
+
+zone.addEventListener("dragover",e=>{
+e.preventDefault();
+});
+
+zone.addEventListener("drop",e=>{
+
+e.preventDefault();
+
+let requiredZone =
+e.dataTransfer.getData("zone");
+
+let text =
+e.dataTransfer.getData("text");
+
+if(requiredZone === zone.id){
+
+tourismScore += 20;
+
+if(zone.id==="eco"){
+ecoScore += 10;
+}
+
+zone.innerHTML +=
+"<br>✅ " + text;
+
+placedItems++;
+
+updateScores();
+
+checkResult();
+
+}else{
+
+tourismScore -= 10;
+ecoScore -= 15;
+
+updateScores();
+
+showMessage(
+"❌ تم وضع المعلم في منطقة غير مناسبة جغرافياً.",
+"lose"
+);
+
+}
+
+});
+
+});
+
+function updateScores(){
+
+document.getElementById(
+"tourismScore"
+).innerText = tourismScore;
+
+document.getElementById(
+"ecoScore"
+).innerText = ecoScore;
+
+}
+
+function showMessage(text,type){
+
+let msg =
+document.getElementById("message");
+
+msg.className =
+"message " + type;
+
+msg.innerHTML = text;
+
+}
+
+function checkResult(){
+
+if(placedItems >= 5){
+
+if(
+tourismScore >= 80 &&
+ecoScore >= 90
+){
+
+showMessage(
+"🎉 أحسنت! نجحت في تطوير السياحة القطرية مع الحفاظ على البيئة والتراث.",
+"win"
+);
+
+}else{
+
+showMessage(
+"⚠️ تم تطوير السياحة ولكن يجب تحسين الاستدامة أو حماية التراث.",
+"lose"
+);
+
+}
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
+```
